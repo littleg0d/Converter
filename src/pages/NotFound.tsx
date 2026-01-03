@@ -22,7 +22,7 @@ export const NotFound = () => {
                 <div className="mb-6 relative">
                     <div className="absolute inset-0 bg-violet-500 blur-[50px] opacity-20" />
                     <img
-                        src="/404-art.png"
+                        src="404-art.png"
                         alt="404 Illustration"
                         className="relative w-full max-w-xs rounded-xl shadow-2xl border border-white/5"
                     />
