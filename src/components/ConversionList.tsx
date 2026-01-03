@@ -21,6 +21,20 @@ export const ConversionList = () => {
             const settings = item.conversionSettings || { quality: 0.8, scale: 1, fps: 10 };
 
             if (item.file.type.startsWith('image/')) {
+                // Calculate target size in MB transparently
+                let targetSizeMB = settings.targetSize;
+                if (settings.targetSize && settings.targetSize > 0) {
+                    if (settings.targetSizeUnit === 'KB') {
+                        targetSizeMB = settings.targetSize / 1024;
+                    }
+
+                    // Safeguard: Prevent absurdly small sizes (e.g. < 5KB)
+                    // 0.005 MB = ~5KB
+                    if (targetSizeMB! < 0.005) {
+                        throw new Error(`Target size is too small (${Math.round(targetSizeMB! * 1024)}KB). Minimum is 5KB.`);
+                    }
+                }
+
                 // 1. Convert Format
                 const blob = await convertImageToWebP(
                     item.file,
@@ -29,7 +43,7 @@ export const ConversionList = () => {
                     settings.scale, // Fallback scale
                     settings.width,
                     settings.height,
-                    settings.targetSize
+                    targetSizeMB
                 );
                 const url = URL.createObjectURL(blob);
 

@@ -14,7 +14,8 @@ export interface FileItem {
         width?: number; // In pixels
         height?: number; // In pixels
         fps?: number;
-        targetSize?: number; // In MB
+        targetSize?: number; // In selected unit
+        targetSizeUnit?: 'MB' | 'KB';
     };
     error?: string;
 }

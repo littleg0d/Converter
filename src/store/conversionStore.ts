@@ -36,7 +36,8 @@ export const useConversionStore = create<ConversionState>((set) => ({
                     scale: 1, // Default scale
                     // width/height will be set when file loads or can be undefined to keep original
                     fps: state.settings.videoFps,
-                    targetSize: 0 // 0 means no target size
+                    targetSize: 0,
+                    targetSizeUnit: 'MB' as 'MB' | 'KB'
                 }
             }))]
         })),

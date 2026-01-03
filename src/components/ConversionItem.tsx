@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FileItem } from '../types';
+import { NumberControl } from './ui/NumberControl';
 import { FileVideo, FileImage, FileType, AlertCircle, Loader2, Download, Trash2, Play, Settings2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -109,7 +110,29 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
 
                                 <button
                                     onClick={() => onConvert(item.id)}
-                                    className="p-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-all shadow-lg shadow-violet-900/20 hover:shadow-violet-600/30 active:scale-95"
+                                    disabled={(() => {
+                                        const s = item.conversionSettings;
+                                        if (s?.targetSize && s.targetSize > 0) {
+                                            const unit = s.targetSizeUnit === 'KB' ? 1024 : 1024 * 1024;
+                                            const bytes = s.targetSize * unit;
+                                            if (bytes < 5120) return true; // Block < 5KB
+                                            if (item.file.size > 0 && bytes < item.file.size * 0.005) return true; // Block < 0.5%
+                                        }
+                                        return false;
+                                    })()}
+                                    className={`p-2 rounded-lg transition-all shadow-lg ${(() => {
+                                        const s = item.conversionSettings;
+                                        if (s?.targetSize && s.targetSize > 0) {
+                                            const u = s.targetSizeUnit === 'KB' ? 1024 : 1024 * 1024;
+                                            const b = s.targetSize * u;
+                                            if (b < 5120) return true;
+                                            if (item.file.size > 0 && b < item.file.size * 0.005) return true;
+                                        }
+                                        return false;
+                                    })()
+                                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                        : 'bg-violet-600 hover:bg-violet-500 text-white shadow-violet-900/20 hover:shadow-violet-600/30 active:scale-95'
+                                        }`}
                                     title="Start Conversion"
                                 >
                                     <Play className="w-4 h-4 fill-current" />
@@ -168,30 +191,24 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
                                     <span>Resolution (px)</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="number"
-                                            min="10"
-                                            max="10000"
+                                    <div className="flex-1">
+                                        <NumberControl
+                                            value={item.conversionSettings.width}
+                                            onChange={(val) => onUpdateSettings(item.id, { width: val || undefined })}
+                                            min={10}
+                                            max={10000}
                                             placeholder="W"
-                                            value={item.conversionSettings.width || ''}
-                                            onChange={(e) => onUpdateSettings(item.id, { width: parseInt(e.target.value) || undefined })}
-                                            className="w-full bg-black/40 border border-white/10 rounded-lg pl-3 pr-2 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-violet-500/50"
                                         />
-                                        <span className="absolute right-2 top-1.5 text-[10px] text-gray-600 pointer-events-none">W</span>
                                     </div>
-                                    <span className="text-gray-600 text-xs">x</span>
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="number"
-                                            min="10"
-                                            max="10000"
+                                    <span className="text-gray-600 text-xs text-center w-4">x</span>
+                                    <div className="flex-1">
+                                        <NumberControl
+                                            value={item.conversionSettings.height}
+                                            onChange={(val) => onUpdateSettings(item.id, { height: val || undefined })}
+                                            min={10}
+                                            max={10000}
                                             placeholder="H"
-                                            value={item.conversionSettings.height || ''}
-                                            onChange={(e) => onUpdateSettings(item.id, { height: parseInt(e.target.value) || undefined })}
-                                            className="w-full bg-black/40 border border-white/10 rounded-lg pl-3 pr-2 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-violet-500/50"
                                         />
-                                        <span className="absolute right-2 top-1.5 text-[10px] text-gray-600 pointer-events-none">H</span>
                                     </div>
                                 </div>
                             </div>
@@ -199,17 +216,30 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
                             {/* Target Size */}
                             <div className="space-y-2">
                                 <div className="flex justify-between text-xs text-gray-400">
-                                    <span title="Target output size">Target Size (MB)</span>
+                                    <span title="Target output size">Max Size</span>
                                 </div>
-                                <input
-                                    type="number"
-                                    min="0.1"
-                                    step="0.1"
-                                    placeholder="Auto"
-                                    value={item.conversionSettings.targetSize || ''}
-                                    onChange={(e) => onUpdateSettings(item.id, { targetSize: parseFloat(e.target.value) || 0 })}
-                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-violet-500/50"
-                                />
+                                <div className="relative flex items-center gap-2">
+                                    <div className="flex-1">
+                                        <NumberControl
+                                            value={item.conversionSettings.targetSize}
+                                            onChange={(val) => onUpdateSettings(item.id, { targetSize: val || 0 })}
+                                            min={0.1}
+                                            step={0.1}
+                                            placeholder="Auto"
+                                            endElement={
+                                                <button
+                                                    type="button"
+                                                    onClick={() => onUpdateSettings(item.id, {
+                                                        targetSizeUnit: item.conversionSettings?.targetSizeUnit === 'KB' ? 'MB' : 'KB'
+                                                    })}
+                                                    className="px-1.5 py-0.5 text-[10px] font-bold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded border border-white/5 transition-colors tracking-wide"
+                                                >
+                                                    {item.conversionSettings.targetSizeUnit || 'MB'}
+                                                </button>
+                                            }
+                                        />
+                                    </div>
+                                </div>
                                 {item.conversionSettings.targetSize ? (
                                     <p className="text-[10px] text-violet-400/80">Quality will be auto-adjusted</p>
                                 ) : null}
@@ -256,6 +286,29 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Validation Error Message */}
+            {(() => {
+                const s = item.conversionSettings;
+                if (!s?.targetSize) return null;
+
+                const unit = s.targetSizeUnit === 'KB' ? 1024 : 1024 * 1024;
+                const targetBytes = s.targetSize * unit;
+                const minBytes = 5120; // 5KB
+
+                if (targetBytes < minBytes) {
+                    return <div className="text-[11px] text-red-400 text-center pb-2 font-medium bg-red-500/10 py-1 rounded mx-2 mb-2 border border-red-500/20">Minimum size is 5KB</div>
+                }
+
+                // Extreme compression check (< 0.5% of original)
+                if (item.file.size > 0 && targetBytes < item.file.size * 0.005) {
+                    return <div className="text-[11px] text-amber-400 text-center pb-2 font-medium bg-amber-500/10 py-1 rounded mx-2 mb-2 border border-amber-500/20">Target size is extremely small ({Math.round((targetBytes / item.file.size) * 1000) / 10}%)</div>
+                }
+
+                return null;
+            })()}
+
+
         </motion.div>
     );
 };
