@@ -15,7 +15,7 @@ export const Home = () => {
                         {/* Glow effect */}
                         <div className="absolute inset-0 bg-violet-600 blur-[40px] opacity-40 rounded-full" />
                         <img
-                            src="logo.png"
+                            src="/logo.png"
                             alt="Universal Converter Logo"
                             className="relative w-16 h-16 rounded-xl shadow-2xl border border-white/10"
                         />
