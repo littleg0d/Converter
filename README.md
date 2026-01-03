@@ -5,18 +5,18 @@ A powerful, privacy-focused file converter that runs entirely in your browser. C
 ## Features
 
 - **100% Client-Side**: All processing happens on your device. Zero data upload.
+- **AI Background Removal (Experimental)**: High-quality background removal using the `briaai/RMBG-1.4` model, running entirely in the browser.
 - **Multi-Format Support**:
   - **Images**: Convert between JPG, PNG, and WebP.
   - **Videos**: Convert to MP4, WebM, and GIF.
-  - **Documents**: Convert images to PDF.
+  - **Documents**: Convert images/text to PDF.
 - **Granular Control**:
   - Adjust quality (for images).
-  - custom resolution (Width/Height) with aspect ratio maintenance.
-  - **Target Size**: Set a maximum file size (MB) and let the app auto-optimize quality.
+  - Custom resolution (Width/Height) with aspect ratio maintenance.
+  - **Target Size**: Set a maximum file size (MB/KB) and let the app auto-optimize quality.
   - **Frame Rate (FPS)**: Control smoothness for video conversions.
 - **Batch Processing**: Queue multiple files and convert them all at once or individually.
 - **Drag & Drop**: Intuitive interface for easy file selection.
-- **PWA Ready**: Installable as a progressive web app (future ready).
 
 ## Tech Stack
 
@@ -26,7 +26,9 @@ A powerful, privacy-focused file converter that runs entirely in your browser. C
 - **Framer Motion** (Smooth UI transitions)
 - **Zustand** (State Management)
 - **FFmpeg.wasm** (Video processing in browser)
-- **Canvas API** (Image processing)
+- **@huggingface/transformers** (AI-powered background removal)
+- **Canvas API** (Image processing & compositing)
+- **jsPDF** (Document generation)
 
 ## Getting Started
 
