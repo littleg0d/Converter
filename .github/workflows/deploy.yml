@@ -21,6 +21,11 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      
+      # Este paso es crucial para que GitHub Pages maneje las rutas de React
+      - name: Create 404 page for GitHub Pages
+        run: cp dist/index.html dist/404.html
+
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
