@@ -9,6 +9,16 @@
     content="Secure, Local, Private File Converter. Convert Images to WebP, Videos to GIF, and Documents to PDF entirely in your browser." />
   <title>Universal Local Converter - Private & Secure</title>
   <script src="coi-serviceworker.js"></script>
+  <meta http-equiv="Content-Security-Policy" 
+  content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-eval'; 
+    style-src 'self' 'unsafe-inline'; 
+    img-src 'self' data: blob:; 
+    worker-src 'self' blob:; 
+    connect-src 'self'; 
+    object-src 'none';
+  ">
 </head>
 
 <body>
