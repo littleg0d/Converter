@@ -7,7 +7,7 @@ export const NotFound = () => {
     <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-[#020617] relative p-4">
       {/* Efecto de resplandor de fondo */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-violet-600/20 blur-[120px] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500] h-[500] bg-violet-600/20 blur-[120px] rounded-full" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center space-y-8 max-w-2xl">
@@ -17,7 +17,7 @@ export const NotFound = () => {
           <img 
             src="404-art.png" 
             alt="Página no encontrada" 
-            className="relative w-64 md:w-80 rounded-2xl shadow-2xl"
+            className="relative w-48 md:w-64 rounded-2xl shadow-2xl"
           />
         </div>
 
