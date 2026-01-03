@@ -1,53 +1,46 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export const NotFound = () => {
-    const navigate = useNavigate();
+  return (
 
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center overflow-hidden relative">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-violet-900/20 blur-[80px] rounded-full" />
-                <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-indigo-900/10 blur-[80px] rounded-full" />
-            </div>
+    <div className="h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-[#020617] relative p-4">
+      {/* Efecto de resplandor de fondo */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-600/20 blur-[120px] rounded-full" />
+      </div>
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative z-10 flex flex-col items-center max-w-xl"
-            >
-                <div className="mb-6 relative">
-                    <div className="absolute inset-0 bg-violet-500 blur-[50px] opacity-20" />
-                    <img
-                        src="404-art.png"
-                        alt="404 Illustration"
-                        className="relative w-full max-w-xs rounded-xl shadow-2xl border border-white/5"
-                    />
-                </div>
-
-                <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white via-white/80 to-white/20 mb-4">
-                    404
-                </h1>
-
-                <p className="text-lg md:text-xl text-gray-400 font-light mb-8 max-w-md">
-                    Oops! The file or page you are looking for seems to have drifted into digital space.
-                </p>
-
-                <div className="flex gap-3">
-                    <button
-                        onClick={() => navigate('/')}
-                        className="cursor-pointer group flex items-center gap-2 px-5 py-2.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all shadow-lg hover:shadow-violet-500/20"
-                    >
-                        <Home className="w-4 h-4" />
-                        <span>Go Home</span>
-                    </button>
-                </div>
-            </motion.div>
-
-            {/* Footer removed per user request */}
+      <div className="relative z-10 flex flex-col items-center text-center space-y-8 max-w-2xl">
+        {/* Arte 404 -  */}
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+          <img 
+            src="/404-art.png" 
+            alt="Página no encontrada" 
+            className="relative w-64 md:w-80 rounded-2xl shadow-2xl"
+          />
         </div>
-    );
+
+        <div className="space-y-4">
+          <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
+            404
+          </h1>
+          <div className="space-y-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-white">¿Te has perdido?</h2>
+            <p className="text-gray-400 text-sm md:text-base max-w-md mx-auto">
+              La página que buscas no existe o ha sido movida a otra ubicación en el convertidor.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to="/"
+          className="group relative inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-bold rounded-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+        >
+          <Home className="w-5 h-5" />
+          Volver al Inicio
+        </Link>
+      </div>
+    </div>
+  );
 };
