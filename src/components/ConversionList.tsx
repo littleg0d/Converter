@@ -5,9 +5,12 @@ import { useVideoConverter } from '../hooks/useVideoConverter';
 import { convertImageToWebP } from '../lib/image-converter';
 import { convertToPdf } from '../lib/pdf-converter';
 
+import { useBgRemoval } from '../hooks/useBgRemoval';
+
 export const ConversionList = () => {
     const { files, removeFile, updateFileStatus, updateFileProgress, setFileOutput, updateFileFormat, updateFileSettings } = useConversionStore();
     const { convertVideo } = useVideoConverter();
+    const { removeBackground } = useBgRemoval();
 
     // Handlers
     const handleConvert = async (id: string) => {
@@ -35,9 +38,19 @@ export const ConversionList = () => {
                     }
                 }
 
-                // 1. Convert Format
+                // 0. Background Removal (Experimental)
+                let sourceFile: File | Blob = item.file;
+                if (item.outputFormat === 'png' && settings.removeBackground) {
+                    updateFileProgress(id, 0.2); // Advance progress for bg removal start
+                    // We treat the bg removal result as the new source for the standard pipeline
+                    // This allows subsequent resizing/quality logic to still apply (though quality is less relevant for PNG)
+                    sourceFile = await removeBackground(item.file, id);
+                    updateFileProgress(id, 0.6); // Jump progress after BG removal (it's the heavy part)
+                }
+
+                // 1. Convert Format / Resize / Optimize
                 const blob = await convertImageToWebP(
-                    item.file,
+                    sourceFile as File, // Function accepts Blob/File usually, checks implementation
                     item.outputFormat as 'webp' | 'png' | 'jpg',
                     settings.quality,
                     settings.scale, // Fallback scale
@@ -63,6 +76,7 @@ export const ConversionList = () => {
                 // PDF
                 updateFileProgress(id, 0.5);
                 const blob = await convertToPdf([item]);
+                updateFileProgress(id, 0.8);
                 const url = URL.createObjectURL(blob);
 
                 setFileOutput(id, blob, url);

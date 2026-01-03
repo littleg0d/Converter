@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FileItem } from '../types';
 import { NumberControl } from './ui/NumberControl';
-import { FileVideo, FileImage, FileType, AlertCircle, Loader2, Download, Trash2, Play, Settings2 } from 'lucide-react';
+import { FileVideo, FileImage, FileType, AlertCircle, Loader2, Download, Trash2, Play, Settings2, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ConversionItemProps {
@@ -107,6 +107,20 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
                                 >
                                     <Settings2 className="w-4 h-4" />
                                 </button>
+
+                                {item.status === 'pending' && item.file.type.startsWith('image/') && item.outputFormat === 'png' && (
+                                    <button
+                                        onClick={() => onUpdateSettings(item.id, { removeBackground: !item.conversionSettings?.removeBackground })}
+                                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border transition-all text-[10px] font-bold tracking-wider ${item.conversionSettings?.removeBackground
+                                            ? 'bg-violet-500/20 border-violet-500/50 text-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.2)]'
+                                            : 'bg-black/20 border-white/5 text-gray-500 hover:text-gray-300 hover:border-white/10'
+                                            }`}
+                                        title="Remove Background (AI)"
+                                    >
+                                        <Sparkles className={`w-3 h-3 ${item.conversionSettings?.removeBackground ? 'animate-pulse' : ''}`} />
+                                        <span className="hidden sm:inline">BG REMOVAL</span>
+                                    </button>
+                                )}
 
                                 <button
                                     onClick={() => onConvert(item.id)}
@@ -282,6 +296,8 @@ export const ConversionItem = ({ item, onRemove, onConvert, onFormatChange, onUp
                                     />
                                 </div>
                             )}
+
+
                         </div>
                     </motion.div>
                 )}

@@ -16,6 +16,7 @@ export interface FileItem {
         fps?: number;
         targetSize?: number; // In selected unit
         targetSizeUnit?: 'MB' | 'KB';
+        removeBackground?: boolean;
     };
     error?: string;
 }
