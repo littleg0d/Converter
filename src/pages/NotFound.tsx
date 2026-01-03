@@ -15,7 +15,7 @@ export const NotFound = () => {
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
           <img 
-            src="/404-art.png" 
+            src="404-art.png" 
             alt="Página no encontrada" 
             className="relative w-64 md:w-80 rounded-2xl shadow-2xl"
           />
